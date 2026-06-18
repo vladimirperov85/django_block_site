@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{%block content%}{{title}}{%endblock %}
+
+{% block content %}
+<section class="form-page">
+            <h1>{{title}}</h1>
+                <form method="POST" enctype="multipart/form-data" class="content-form">
+                        {% csrf_token %}
+                            {{form.as_p}}
+                            <button type="submit">Сохранить</button>
+                                <a alass ="button secondary" href="">Отмена</a>
+                </form>
+</section>
+{% endblock%}
