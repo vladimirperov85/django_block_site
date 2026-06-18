@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{%block content%}{{title}}{%endblock %}
+{% block title %}{{title}}{%endblock %}
 
 {% block content %}
 <section class="form-page">
@@ -8,7 +8,7 @@
                         {% csrf_token %}
                             {{form.as_p}}
                             <button type="submit">Сохранить</button>
-                                <a alass ="button secondary" href="">Отмена</a>
+                                <a class ="button secondary" href="">Отмена</a>
                 </form>
 </section>
 {% endblock%}

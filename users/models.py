@@ -9,5 +9,5 @@ class CustomUser(AbstractUser):
     city = models.CharField('город',max_length=100, blank=True)
     avatar = models.ImageField('аватар',upload_to='avatars/',blank=True, null=True)
 
-def __str__(self):
-    return self.username
+    def __str__(self):
+        return self.username

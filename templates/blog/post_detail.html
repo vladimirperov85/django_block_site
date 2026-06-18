@@ -47,7 +47,7 @@
           {% if user in post.likes.all %}Убрать лайк{% else %}Поставить лайк{% endif %}
         </button>
       </form>
-      <span class="likes-counter">Лайков: {{ post.like_count }}</span>
+      <span class="likes-counter">Лайков: {{ post.likes_count }}</span>
     {% endif %}
 
     <!-- Редактирование/удаление -->

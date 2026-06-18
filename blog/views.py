@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from blog.forms import PostForm,Post
-
+from blog.models import Post
+from blog.forms import PostForm 
 
 def post_create(request):
     if request.method == 'POST':
