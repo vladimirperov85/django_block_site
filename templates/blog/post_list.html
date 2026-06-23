@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Посты{% endblock %}
+
+{% block content %}
+<section class="page-title">
+            <h1>Посты</h1>
+            <p>Читаете посты,ищите по тексту, фильтруйте по автору и тегам</p>
+</section>
+
+{% if not hide_filters %}
+<form class = 'filters' metod='get'>
+    <label>
+            <input type="search" name="q" placeholder="Поиск по тексту" value="{{ query }}">
+    </label>
+
+    <label>
+        Автор
+                <select name="author">
+                        <option value="">Все авторы</option>
+                        {% for author in authors %}
+                            <option value="{{ author.id }}" {% if selected_author == author.id|stringformat:'s' %}selected{% endif %}>
+                            {{ author.username }}
+                        </option>
+                        {% endfor %}
+                </select>
+            </label>
+            
+            <label>
+        Категория
+                <select name="category">
+                        <option value="">Все категории</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:'s' %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                </select>
+            </label>
+        
+        Тег
+                <select name="tag">
+                        <option value="">Все теги</option>
+                        {% for tag in tags %}
+                            <option value="{{ tag.id }}" {% if selected_category == tag.id|stringformat:'s' %}selected{% endif %}>
+                            {{ tag.name }}
+                        </option>
+                        {% endfor %}
+                </select>
+            </label>
+
+            <label>
+                Сортировка
+                        <select name="sort">
+                                <option value="-created_at" {% if selected_sort == '-created_at' %}selected{% endif %}>Сначала новые</option>
+                                <option value="created_at" {% if selected_sort == 'created_at' %}selected{% endif %}>Сначала старые</option>
+                                <option value="title" {% if selected_sort == 'title' %}selected{% endif %}>По алфавиту</option>
+                                <option value="-title" {% if selected_sort == '-title' %}selected{% endif %}>По алфавиту в обратном порядке</option>
+                                <option value="-likes" {% if selected_sort == '-likes' %}selected{% endif %}>Больше лайков</option>
+                                <option value="likes" {% if selected_sort == 'likes' %}selected{% endif %}>Меньше лайков</option>
+                        </select>
+            </label>
+                            <button type="submit">Применить</button>
+                            <a class="button secondary" href="{% url 'blog:post_list' %}">Сбросить</a>
+</form> 
+{%endif%}
+
+<section class="post-list">
+{% for post in posts %}
+    <article class="post-card">
+    <div class="post-meta">
+        <a href="">{{ post.author.username }}</a>
+        <span>{{ post.created_at|date:'d.m.Y H:i' }}</span>
+    </div>
+
+    <h2><a href="{% url 'blog:post_detail' post.pk %}">{{ post.title }}</a></h2>
+
+    {% if post.category %}
+        <p class="category-label">Категория: {{ post.category.name }}</p>
+    {% else %}
+        <p class="category-label muted">Без категории</p>
+    {% endif %}
+
+    <p>{{ post.text|truncatewords:35 }}</p>
+
+    <div class="tags">
+        {% for tag in post.tags.all %}
+        <span class="tag">{{ tag.name }}</span>
+        {% empty %}
+        <span class="muted">Без тегов</span>
+        {% endfor %}
+    </div>
+
+    <div class="post-actions">
+        <span>Лайков: {{ post.likes_count }}</span>
+        <a href="{% url 'blog:post_detail' post.pk %}">Читать</a>
+    </div>
+    </article>
+{% empty %}
+    <p class="empty">Посты не найдены.</p>
+{% endfor %}
+</section>
+
+{% endblock%}
+                
+
+
