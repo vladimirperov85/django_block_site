@@ -59,7 +59,7 @@ def post_list(request):
         'title': 'title',
         '-title': '-title',
         '-likes_count': '-likes_count',
-        'likes': 'likes__count'
+        'likes_count': 'likes_count'
         }
     posts = posts.order_by(allowed_sort_fields.get(sort, '-created_at'))
     context = {
