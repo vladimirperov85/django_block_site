@@ -52,10 +52,10 @@
 
     <!-- Редактирование/удаление -->
     {% if user == post.author %}
-      <a class="button" href="">Редактировать</a>
+    <a href="{% url 'blog:post_update' post.pk %}">Редактировать пост</a>
     {% endif %}
     {% if user == post.author or user.is_staff %}
-      <a class="button danger" href="">Удалить</a>
+      <a class="button danger" href="{% url 'blog:post_delete' post.pk %}">Удалить</a>
     {% endif %}
   </div>
 </article>

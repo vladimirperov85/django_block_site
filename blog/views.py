@@ -4,6 +4,9 @@ from django.contrib.auth import get_user_model
 from blog.models import Post, Category,Tag
 from blog.forms import PostForm 
 from django.db.models import Q,Count
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def post_create(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
@@ -72,7 +75,68 @@ def post_list(request):
         'selected_category': category_id,
         'selected_tag': tag_id,
         'selected_sort': sort,
+        'page_heading': 'Посты',
+        'page_description':'Читаете посты, ищите по тексту, фильтруйте по автору и тегам',
 
     }
     return render(request, 'blog/post_list.html', context=context)
 
+def user_posts(request, user_id):
+    author = get_object_or_404(get_user_model(), pk=user_id)
+    posts = (
+            Post.objects.select_related('author', 'category')
+                .prefetch_related('tags', 'likes')
+                .filter(author=author)
+                .annotate(likes_count=Count('likes'))
+                .order_by('-created_at')
+    )
+    context = {'posts': posts,
+            'hide_filters': True,
+            'page_heading': f'Посты {author.username}',
+            'page_description':'Читаете посты, ищите по тексту, фильтруйте по автору и тегам',
+            }
+    return render(request, 'blog/post_list.html', context=context)
+
+@login_required
+def my_posts(request):
+    
+    posts = (
+            Post.objects.select_related('author', 'category')
+                .prefetch_related('tags', 'likes')
+                .filter(author=request.user)
+                .annotate(likes_count=Count('likes'))
+                .order_by('-created_at')
+    )
+    context = {'posts': posts,
+            'hide_filters': True,
+            'page_heading': 'Мои посты',
+            'page_description':'Все опубликованные мной посты',
+            }
+    return render(request, 'blog/post_list.html', context=context)
+
+@login_required
+def post_update(request, pk):
+    # редактирование поста(толькл свои)
+    post = get_object_or_404(Post, pk=pk)
+    if post.author != request.user:
+        messages.error(request, 'Вы не можете редактировать чужие посты!')
+        return redirect(post)
+    if request.method == 'POST':
+        form = PostForm(request.POST,request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Пост успешно обновлен!')
+        else:
+            form = PostForm(instance=post)
+    return render(request, 'blog/post_form.html', context= {'form': form})
+
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    if post.author != request.user and not request.user.is_staff:
+        messages.error(request, 'Вы не можете удалять чужие посты!')
+        return redirect(post)
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, 'Пост успешно удален!')
+        return redirect('blog:post_list')
+    return render(request, 'blog/post_confirm_delete.html', context={'post':post})

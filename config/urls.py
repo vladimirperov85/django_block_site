@@ -27,5 +27,7 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
 ]
 
+# В режиме разраблтки (DEBUG = TRUE) Django может отдавать загруженные файлы
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

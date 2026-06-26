@@ -119,8 +119,8 @@
     </style>
 
     <section class="filters-section">
-        <h1>Посты</h1>
-        <p>Читаете посты, ищите по тексту, фильтруйте по автору и тегам</p>
+        <h1>{{page_heading}}</h1>
+        <p> {{page_description}}</p> 
         
         {% if not hide_filters %}
         <form class="filters-form" method='get'>
@@ -189,7 +189,7 @@
         {% for post in posts %}
         <article class="post-card">
             <div class="post-meta">
-                <a href="">{{ post.author.username }}</a>
+                <a href="{% url 'blog:users_posts' post.author.pk %}">{{ post.author.username }}</a>
                 <span>{{ post.created_at|date:'d.m.Y H:i' }}</span>
             </div>
 
