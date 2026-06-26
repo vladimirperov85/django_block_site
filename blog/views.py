@@ -17,9 +17,9 @@ def post_create(request):
             form.save_m2m()
             messages.success(request, 'Пост создан!')
             return redirect(post.get_absolute_url())
-    else:
-        form = PostForm()
-        return render(request, 'blog/post_form.html', context = {'form':form,'title': 'Новый пост'})
+        
+    
+    return render(request, 'blog/post_form.html', context = {'form':form,'title': 'Новый пост'})
     
 
 def post_detail(request,pk):
@@ -120,15 +120,15 @@ def post_update(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if post.author != request.user:
         messages.error(request, 'Вы не можете редактировать чужие посты!')
-        return redirect(post)
-    if request.method == 'POST':
-        form = PostForm(request.POST,request.FILES, instance=post)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Пост успешно обновлен!')
-        else:
-            form = PostForm(instance=post)
-    return render(request, 'blog/post_form.html', context= {'form': form})
+        return redirect('blog:post_detail', pk=post.pk)
+    form = PostForm(request.POST or None, request.FILES or None, instance=post)
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Пост успешно обновлен!')
+        return redirect('blog:post_detail', pk=post.pk)
+
+    return render(request, 'blog/post_form.html', context={'form': form})
 
 def post_delete(request, pk):
     post = get_object_or_404(Post, pk=pk)

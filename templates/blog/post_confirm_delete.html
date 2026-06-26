@@ -8,7 +8,7 @@
                 <form method="POST">
                     {% csrf_token %}
                     <button type="submit">Удалить</button>
-                    <a class ="button secondary" href="{% url 'post_detail' post.pk %}">Отмена</a>
+                    <a class ="button secondary" href="{% url 'blog:post_detail' post.pk %}">Отмена</a>
                 </form>
 </section>
 {%endblock%}
