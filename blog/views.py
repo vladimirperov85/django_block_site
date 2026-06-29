@@ -140,3 +140,4 @@ def post_delete(request, pk):
         messages.success(request, 'Пост успешно удален!')
         return redirect('blog:post_list')
     return render(request, 'blog/post_confirm_delete.html', context={'post':post})
+
