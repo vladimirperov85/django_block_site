@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def post_create(request):
+    form = PostForm()
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -115,7 +116,7 @@ def my_posts(request):
     return render(request, 'blog/post_list.html', context=context)
 
 @login_required
-def post_update(request, pk):
+def post_edit(request, pk):
     # редактирование поста(толькл свои)
     post = get_object_or_404(Post, pk=pk)
     if post.author != request.user:
@@ -126,7 +127,7 @@ def post_update(request, pk):
     if request.method == 'POST' and form.is_valid():
         form.save()
         messages.success(request, 'Пост успешно обновлен!')
-        return redirect('blog:post_detail', pk=post.pk)
+        return redirect('blog:post_edit', pk=post.pk)
 
     return render(request, 'blog/post_form.html', context={'form': form})
 

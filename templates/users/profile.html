@@ -2,18 +2,20 @@
 
 {% block content %}
 <br>
-<h2>Информация о пользователе{{user.username}}</h2>
-<div>Логин - {{user.user_first_name}}</div>{%endif%}
-<div>Логин - {{user.user_last_name}}</div>{%endif%}
-<div>Фамилия - {{user.last_name}}</div>
-<div>Электронная почта - {{user.email}}</div>
-<div>Телефон - {{user.phone}}</div>
+<h2>Информация о пользователе: {{ user.username }}</h2>
+{% if user.first_name or user.last_name %}
+<div>Имя - {{ user.first_name|default:'Не указано' }}</div>
+<div>Фамилия - {{ user.last_name|default:'Не указано' }}</div>
+{% endif %}
+<div>Электронная почта : {{ user.email|default:'Не указано' }}</div>
+<div>Телефон : {{ user.phone|default:'Не указано' }}</div>
+<div>Город : {{ user.city|default:'Не указано' }}</div>
 <br>
-<div>Дата регистрации- {{user.date_joined|date:'d-m-Y H:i'}}</div>
-{%endblock content}
-
-
-
-
-
-
+<div>Дата регистрации: {{ user.date_joined|date:'d-m-Y H:i' }}</div>
+{% if user.avatar %}
+<div>
+    <h3>Аватар:</h3>
+    <img src="{{ user.avatar.url }}" alt="Аватар пользователя" style="max-width: 150px; max-height: 150px;">
+</div>
+{% endif %}
+{% endblock %}

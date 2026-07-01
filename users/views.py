@@ -43,7 +43,7 @@ def log_out(request):
 @login_required
 def user_profile(request, pk):
     user = get_object_or_404(User, pk=pk)
-    if request.user == user:
+    if request.user != user:
         raise PermissionDenied()
     
     context = {'user': user,
