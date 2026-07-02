@@ -120,7 +120,7 @@
 
     <section class="filters-section">
         <h1>{{page_heading}}</h1>
-        <p> {{page_description}}</p> 
+        <p>{{ page_description }}</p>
         
         {% if not hide_filters %}
         <form class="filters-form" method='get'>
@@ -188,17 +188,19 @@
     <section class="post-list">
         {% for post in posts %}
         <article class="post-card">
+            
+
+            <h2><a href="{% url 'blog:post_detail' post.pk %}">{{ post.title }}</a></h2>
             <div class="post-meta">
                 <a href="{% url 'users:profile' post.author.pk %}">{{ post.author.username }}</a>
                 <span>{{ post.created_at|date:'d.m.Y H:i' }}</span>
-            </div>
-
-            <h2><a href="{% url 'blog:post_detail' post.pk %}">{{ post.title }}</a></h2>
+            </div> 
 
             {% if post.category %}
                 <p class="category-label">Категория: {{ post.category.name }}</p>
             {% else %}
                 <p class="category-label muted">Без категории</p>
+                
             {% endif %}
 
             <p>{{ post.text|truncatewords:35 }}</p>

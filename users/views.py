@@ -6,6 +6,9 @@ from config.settings import LOGIN_REDIRECT_URL
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 User = get_user_model()
+from blog.models import Post
+from django.db.models import Count
+
 
 def home(request):
     return render(request, 'users/home.html')
@@ -43,12 +46,17 @@ def log_out(request):
 @login_required
 def user_profile(request, pk):
     user = get_object_or_404(User, pk=pk)
-    context = {'me': True ,
-            'user': user,
-            'title': 'Информация о профиле',
-            }
+    context = {
+        'me': request.user == user,
+        'user': user,
+        'title': 'Информация о профиле',
+    }
     
-    if request.user != user:
-        context ['me'] =  False
-    
+    # Получаем посты автора профиля
+    context['user_posts'] = Post.objects.select_related('author', 'category') \
+        .prefetch_related('tags', 'likes') \
+        .filter(author=user) \
+        .annotate(likes_count=Count('likes')) \
+        .order_by('-created_at')
+        
     return render(request, 'users/profile.html', context=context)

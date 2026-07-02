@@ -32,4 +32,17 @@
     <img src="{{ user.avatar.url }}" alt="Аватар пользователя" style="max-width: 150px; max-height: 150px;">
 </div>
 {% endif %}
+<h2>Публикации {{ user.username }}</h2>
+{% if user_posts %}
+    <ul class="profile-posts">
+    {% for post in user_posts %}
+        <li>
+            <a href="{% url 'blog:post_detail' post.pk %}">{{ post.title }}</a>
+            <span> — {{ post.created_at|date:"d.m.Y" }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>У пользователя пока нет публикаций.</p>
+{% endif %}
 {% endblock %}
