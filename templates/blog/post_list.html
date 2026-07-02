@@ -189,7 +189,7 @@
         {% for post in posts %}
         <article class="post-card">
             <div class="post-meta">
-                <a href="{% url 'blog:users_posts' post.author.pk %}">{{ post.author.username }}</a>
+                <a href="{% url 'users:profile' post.author.pk %}">{{ post.author.username }}</a>
                 <span>{{ post.created_at|date:'d.m.Y H:i' }}</span>
             </div>
 

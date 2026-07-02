@@ -43,9 +43,12 @@ def log_out(request):
 @login_required
 def user_profile(request, pk):
     user = get_object_or_404(User, pk=pk)
-    if request.user != user:
-        raise PermissionDenied()
+    context = {'me': True ,
+            'user': user,
+            'title': 'Информация о профиле',
+            }
     
-    context = {'user': user,
-                'title': 'Информация о профиле'}
+    if request.user != user:
+        context ['me'] =  False
+    
     return render(request, 'users/profile.html', context=context)
