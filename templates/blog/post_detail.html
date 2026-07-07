@@ -155,7 +155,7 @@
     <div class="post-actions">
         <!-- Кнопка лайка (пока просто визуал, для работы нужен view) -->
         {% if user.is_authenticated %}
-            <form method="post" action="">
+            <form method="post" action="{% url 'blog:post_like' post.pk %}">
                 {% csrf_token %}
                 <button type="submit">
                     {% if user in post.likes.all %}Убрать лайк ({{ post.likes_count }}) {% else %}Поставить лайк ({{ post.likes_count }}){% endif %}

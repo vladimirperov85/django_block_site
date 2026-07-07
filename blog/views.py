@@ -142,3 +142,13 @@ def post_delete(request, pk):
         return redirect('blog:post_list')
     return render(request, 'blog/post_confirm_delete.html', context={'post':post})
 
+@login_required
+def post_like(request,pk):
+    # поставить или убрать лайк
+    post = get_object_or_404(Post,pk=pk)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+
+    return redirect(request.META.get('HTTP_REFERER',post.get_absolute_url()))
